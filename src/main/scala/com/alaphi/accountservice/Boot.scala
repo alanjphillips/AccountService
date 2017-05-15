@@ -1,0 +1,21 @@
+package com.alaphi.accountservice
+
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.stream.ActorMaterializer
+
+object Boot extends App {
+
+  implicit val system = ActorSystem("AccountService")
+  implicit val materializer = ActorMaterializer()
+  implicit val executionContext = system.dispatcher
+
+  val db = system.actorOf(AccountDBActor.props)
+
+  val accountService = AccountService(db)
+
+  val routes = AccountRoutes(accountService).routes
+
+  val bindingFuture = Http().bindAndHandle(routes, "0.0.0.0", 8081)
+
+}
