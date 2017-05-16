@@ -8,6 +8,11 @@ import de.heikoseeberger.akkahttpcirce.CirceSupport._
 import io.circe.generic.auto._
 import scala.util.{Failure, Success}
 
+/**
+  * AccountRoutes: REST Interface for Accounts
+  *
+  * @param accountService
+  */
 class AccountRoutes(accountService: AccountService) {
 
   val successHandler: PartialFunction[Any, StandardRoute] = {

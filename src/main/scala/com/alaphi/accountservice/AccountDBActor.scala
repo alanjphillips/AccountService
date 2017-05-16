@@ -5,7 +5,7 @@ import scala.collection.immutable.HashMap
 import akka.actor.{Actor, Props}
 
 /**
-  * Database Wrapper Actor
+  * AccountDBActor: Database Wrapper Actor
   *
   * Accounts are stored in immutable storageMap: Map[String, Account] which is a parameter to the receive handler named store
   *

@@ -6,6 +6,12 @@ import akka.util.Timeout
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
+/**
+  * AccountService: Performs Asks to DB Actor, mapping Actor response to Future[_]
+  *
+  * @param db
+  * @param ec
+  */
 class AccountService(db: ActorRef)(implicit ec: ExecutionContext) {
 
   implicit val timeout = Timeout(5 seconds)
