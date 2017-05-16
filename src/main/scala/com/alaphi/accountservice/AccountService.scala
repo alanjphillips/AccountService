@@ -18,10 +18,10 @@ class AccountService(db: ActorRef)(implicit ec: ExecutionContext) {
 
   def create(accountCreation: AccountCreation): Future[Account] = (db ? accountCreation).mapTo[Account]
 
-  def read(accountNumber: String): Future[Account] = (db ? GetAccount(accountNumber)).mapTo[Account]
+  def read(accountNumber: String): Future[Option[Account]] = (db ? GetAccount(accountNumber)).mapTo[Option[Account]]
 
   def transfer(accountNumber: String, transfer: MoneyTransfer): Future[Either[TransferFailed, TransferSuccess]] = {
-    val doTransfer = DoMoneyTransfer(accountNumber, transfer.destAccNum,  transfer.transferAmount)
+    val doTransfer = DoMoneyTransfer(accountNumber, transfer.destAccNum, transfer.transferAmount)
     (db ? doTransfer).mapTo[Either[TransferFailed, TransferSuccess]]
   }
 

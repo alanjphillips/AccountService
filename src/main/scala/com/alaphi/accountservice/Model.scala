@@ -27,7 +27,8 @@ case class TransferSuccess(
 case class TransferFailed(
   sourceAccNum: String,
   destAccNum: String,
-  transferAmount: Int
+  transferAmount: Int,
+  description: String
 ) extends Payload
 
 case class DoMoneyTransfer(sourceAccNum: String, destAccNum: String, transferAmount: Int)
