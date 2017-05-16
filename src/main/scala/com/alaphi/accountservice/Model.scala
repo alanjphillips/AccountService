@@ -18,8 +18,18 @@ case class MoneyTransfer(
   transferAmount: Int
 ) extends Payload
 
+case class TransferSuccess(
+  sourceAccount: Account,
+  destAccount: Account,
+  transferAmount: Int
+) extends Payload
+
+case class TransferFailed(
+  sourceAccNum: String,
+  destAccNum: String,
+  transferAmount: Int
+) extends Payload
+
 case class DoMoneyTransfer(sourceAccNum: String, destAccNum: String, transferAmount: Int)
-case class TransferSuccess(sourceAccount: Account, destAccount: Account, transferAmount: Int) extends Payload
-case class TransferFailed(sourceAccNum: String, destAccNum: String, transferAmount: Int) extends Payload
 case class RemoveAccount(key: String)
 case class GetAccount(key: String)
