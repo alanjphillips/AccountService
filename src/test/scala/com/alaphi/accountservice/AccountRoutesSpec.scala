@@ -36,10 +36,36 @@ class AccountRoutesSpec extends WordSpec with Matchers with MockitoSugar with Sc
       }
     }
 
+    "Request fails due to unexpected RuntimeException" in {
+      when(accountService.create(createAccount)).thenReturn(Future.failed(new RuntimeException("fail")))
+
+      Post("/accounts", HttpEntity(MediaTypes.`application/json`, createAccountJson)) ~> accRoutes ~> check {
+        status shouldBe InternalServerError
+      }
+    }
+
     "Transfer between 2 Accounts" in {
       Post("/accounts/1000/transfer", HttpEntity(MediaTypes.`application/json`, transferAccountJson)) ~> accRoutes ~> check {
         status shouldBe OK
         responseAs[TransferSuccess].asJson.noSpaces shouldBe transferSuccessJsonNoSpaces
+      }
+    }
+
+    "Transfer between 2 Accounts fails due to insufficient funds" in {
+      when(accountService.transfer(srcAccount.accNumber, moneyTransfer)).thenReturn(Future.successful(Left(transferFailed)))
+
+      Post("/accounts/1000/transfer", HttpEntity(MediaTypes.`application/json`, transferAccountJson)) ~> accRoutes ~> check {
+        status shouldBe BadRequest
+        responseAs[TransferFailed].asJson.noSpaces shouldBe transferFailedJsonNoSpaces
+      }
+    }
+
+    "Transfer between 2 Accounts fails due to account not found" in {
+      when(accountService.transfer(srcAccount.accNumber, moneyTransfer)).thenReturn(Future.successful(Left(accountNotFound)))
+
+      Post("/accounts/1000/transfer", HttpEntity(MediaTypes.`application/json`, transferAccountJson)) ~> accRoutes ~> check {
+        status shouldBe NotFound
+        responseAs[AccountNotFound].asJson.noSpaces shouldBe accountsNotFoundJsonNoSpaces
       }
     }
 
@@ -50,10 +76,28 @@ class AccountRoutesSpec extends WordSpec with Matchers with MockitoSugar with Sc
       }
     }
 
+    "Deposit to an Account fails due to account not found" in {
+      when(accountService.deposit(srcAccount.accNumber, deposit)).thenReturn(Future.successful(Left(accountNotFound)))
+
+      Post("/accounts/1000/deposit", HttpEntity(MediaTypes.`application/json`, depositAccountJson)) ~> accRoutes ~> check {
+        status shouldBe NotFound
+        responseAs[AccountNotFound].asJson.noSpaces shouldBe accountsNotFoundJsonNoSpaces
+      }
+    }
+
     "Get an Account" in {
       Get("/accounts/1000") ~> accRoutes ~> check {
         status shouldBe OK
         responseAs[Account].asJson.noSpaces shouldBe accountJsonNoSpaces
+      }
+    }
+
+    "Get an Account fails due to account not found" in {
+      when(accountService.read(srcAccount.accNumber)).thenReturn(Future.successful(Left(accountNotFound)))
+
+      Get("/accounts/1000") ~> accRoutes ~> check {
+        status shouldBe NotFound
+        responseAs[AccountNotFound].asJson.noSpaces shouldBe accountsNotFoundJsonNoSpaces
       }
     }
 
@@ -71,11 +115,13 @@ class AccountRoutesSpec extends WordSpec with Matchers with MockitoSugar with Sc
 object AccountRoutesSpec {
   val createAccount = AccountCreation("Joey", 25000)
   val srcAccount = Account("1000", "Joey", 25000)
+  val accountNotFound = AccountNotFound("1000", "AccountNotFound")
 
   val moneyTransfer = MoneyTransfer("1001", 10000)
   val srcAccountAfter = Account("1000", "Joey", 15000)
   val destAccountAfter = Account("1001", "Junior", 10000)
   val transferSuccess = TransferSuccess(srcAccountAfter, destAccountAfter, 10000)
+  val transferFailed = TransferFailed("1000", "1001", 10000, "TransferFailed")
 
   val deposit = Deposit(3000)
   val depositSuccess = DepositSuccess(srcAccount, 3000)
@@ -157,9 +203,30 @@ object AccountRoutesSpec {
        |]
         """.stripMargin
 
+  val transferFailedJson =
+    s"""
+       |{
+       |  "sourceAccNum": "1000",
+       |  "destAccNum": "1001",
+       |  "transferAmount": 10000,
+       |  "description": "TransferFailed"
+       |}
+        """.stripMargin
+
+  val accountNotFoundJson =
+    s"""
+       |{
+       |  "accNumber": "1000",
+       |  "description": "AccountNotFound"
+       |}
+        """.stripMargin
+
   val accountJsonNoSpaces = parse(accountJson).getOrElse(Json.Null).noSpaces
   val transferSuccessJsonNoSpaces = parse(transferSuccessJson).getOrElse(Json.Null).noSpaces
+  val transferFailedJsonNoSpaces = parse(transferFailedJson).getOrElse(Json.Null).noSpaces
   val depositSuccessJsonNoSpaces = parse(depositSuccessJson).getOrElse(Json.Null).noSpaces
   val allAccountsJsonNoSpaces = parse(allAccountsJson).getOrElse(Json.Null).noSpaces
+  val accountsNotFoundJsonNoSpaces = parse(accountNotFoundJson).getOrElse(Json.Null).noSpaces
+
 }
 
