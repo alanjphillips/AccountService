@@ -29,12 +29,18 @@ class AccountDBActor extends Actor {
       val src = getAccount(storageMap, dt.sourceAccNum)
       val dest = getAccount(storageMap, dt.destAccNum)
       val txfrResult = transfer(src, dest, dt.transferAmount)                                                                      // Get src and dest accounts from memory and pass to transfer
-      txfrResult foreach (r => context.become(store(addAccountsToMap(storageMap, List(r.sourceAccount, r.destAccount)))))          // make store(changedMap) the new receive handler for incoming messages
+      txfrResult foreach (r => context.become(store(addAccountsToMap(storageMap, List(r.sourceAccount, r.destAccount)))))          // make store(changedMap) the new receive handler for incoming messages while storing both adjusted accounts
       sender ! txfrResult                                                                                                          // Send Either[AccountError, TransferSuccess] to sender to signify transfer completed or failed
 
-    case ga: GetAccount     => sender ! getAccount(storageMap, ga.accNumber)
+    case dep: DoDeposit =>
+      val acc = getAccount(storageMap, dep.accNum)
+      val depResult = deposit(acc, dep.depositAmount)
+      depResult foreach (r => context.become(store(addAccountsToMap(storageMap, List(r.account)))))
+      sender ! depResult
 
-    case GetAllAccounts     => sender ! storageMap.values.toList
+    case ga: GetAccount => sender ! getAccount(storageMap, ga.accNumber)
+
+    case GetAllAccounts => sender ! storageMap.values.toList
 
     case _ =>
   }
@@ -58,12 +64,19 @@ class AccountDBActor extends Actor {
     } else Left(TransferFailed(src.accNumber, dest.accNumber, amount, s"Not enough funds available in account number: ${src.accNumber}"))
   }
 
+  def deposit(acc: Either[AccountError, Account], amount: Int): Either[AccountError, DepositSuccess] =
+    acc map { a =>
+      DepositSuccess(
+        a.copy(balance = a.balance + amount),
+        amount
+      )
+    }
+
   def addAccountsToMap(storageMap: Map[String, Account], accounts: List[Account]) =
     storageMap ++ (accounts map (a => (a.accNumber, a)))                                                                                // Convert List[Account] to List[(AccNum,Account)]
 
-  def getAccount(storageMap: Map[String, Account], accountNumber: String): Either[AccountError, Account] = {
+  def getAccount(storageMap: Map[String, Account], accountNumber: String): Either[AccountError, Account] =
     storageMap.get(accountNumber).toRight[AccountNotFound](AccountNotFound(accountNumber, s"Account Number doesn't exist: $accountNumber"))
-  }
 
   def genAccountNum(storageMap: Map[String, Account]) = (ACC_NUM_BASE + storageMap.size).toString
 }

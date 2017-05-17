@@ -64,7 +64,7 @@ Response: Successful transfer will have Http Status Code = 200 OK
 }
 ```
 Errors: 
-- Insufficient funds in source account will have Http Status Code = 400 Bad Request
+Insufficient funds in source account will have Http Status Code = 400 Bad Request
 ```json
 {
   "sourceAccNum": "1000",
@@ -73,7 +73,7 @@ Errors:
   "description": "Not enough funds available in account: 1000 "
 }
 ```
-- Account Not Found for source account path param or destination `destAccNum` in json body will have Http Status Code = 404 Not Found
+Account Not Found for source account path param or destination `destAccNum` in json body will have Http Status Code = 404 Not Found
 ```json
 {
   "accountNumber": "1000000",
@@ -118,7 +118,37 @@ Response:
   "balance": 200
 }
 ```
-
+6) Perform deposit to account as path param with value `1000` representing `Joey`:
+````
+Method: Post
+Uri:    http://127.0.0.1:8081/accounts/1000/deposit
+Header: Content-Type: application/json
+````
+Body:
+```json
+{
+"depositAmount":10000
+}
+````
+Response: Successful transfer will have Http Status Code = 200 OK
+```json
+{
+  "account": {
+    "accNumber": "1001",
+    "accHolderName": "Junior",
+    "balance": 120200
+  },
+  "depositAmount": 10000
+}
+```
+Errors: 
+Account Not Found for source account path param or destination `destAccNum` in json body will have Http Status Code = 404 Not Found
+```json
+{
+  "accountNumber": "1000000",
+  "description": "Account Number doesn't exist: 1000000"
+}
+```
 
 TODO:
 - Unit tests

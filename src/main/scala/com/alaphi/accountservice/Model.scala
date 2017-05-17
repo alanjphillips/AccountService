@@ -21,10 +21,19 @@ case class MoneyTransfer(
   transferAmount: Int
 ) extends Payload
 
+case class Deposit(
+  depositAmount: Int
+) extends Payload
+
 case class TransferSuccess(
   sourceAccount: Account,
   destAccount: Account,
   transferAmount: Int
+) extends Payload
+
+case class DepositSuccess(
+  account: Account,
+  depositAmount: Int
 ) extends Payload
 
 case class TransferFailed(
@@ -40,6 +49,7 @@ case class AccountNotFound(
 ) extends AccountError with Payload
 
 case class DoMoneyTransfer(sourceAccNum: String, destAccNum: String, transferAmount: Int)
+case class DoDeposit(accNum: String, depositAmount: Int)
 case class RemoveAccount(accNumber: String)
 case class GetAccount(accNumber: String)
 case object GetAllAccounts

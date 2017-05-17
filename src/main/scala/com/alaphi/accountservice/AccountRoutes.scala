@@ -20,6 +20,7 @@ class AccountRoutes(accountService: AccountService) {
     case Success(accs: List[Account])         => complete(OK -> accs)
     case Success(Right(acc: Account))         => complete(OK -> acc)
     case Success(Right(trs: TransferSuccess)) => complete(OK -> trs)
+    case Success(Right(dep: DepositSuccess))  => complete(OK -> dep)
   }
 
   val operationalFailureHandler: PartialFunction[Any, StandardRoute] = {
@@ -44,6 +45,13 @@ class AccountRoutes(accountService: AccountService) {
       post {
         entity(as[MoneyTransfer]) { moneyTransfer =>
           onComplete(accountService.transfer(accountNumber, moneyTransfer))(successHandler orElse operationalFailureHandler orElse failureHandler)
+        }
+      }
+    } ~
+    path("accounts" / Segment / "deposit") { accountNumber =>
+      post {
+        entity(as[Deposit]) { deposit =>
+          onComplete(accountService.deposit(accountNumber, deposit))(successHandler orElse operationalFailureHandler orElse failureHandler)
         }
       }
     } ~
