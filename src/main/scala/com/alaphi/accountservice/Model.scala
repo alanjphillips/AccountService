@@ -6,13 +6,13 @@ trait AccountError {
 }
 
 case class AccountCreation(
-  name: String,
+  accHolderName: String,
   balance: Int = 0
 ) extends Payload
 
 case class Account(
-  number: String,
-  name: String,
+  accNumber: String,
+  accHolderName: String,
   balance: Int
 ) extends Payload
 
@@ -40,8 +40,8 @@ case class AccountNotFound(
 ) extends AccountError with Payload
 
 case class DoMoneyTransfer(sourceAccNum: String, destAccNum: String, transferAmount: Int)
-case class RemoveAccount(key: String)
-case class GetAccount(key: String)
+case class RemoveAccount(accNumber: String)
+case class GetAccount(accNumber: String)
 case object GetAllAccounts
 
 

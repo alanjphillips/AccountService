@@ -81,9 +81,45 @@ Errors:
 }
 ```
 
+4) Get all accounts:
+````
+Method: Get
+Uri:    http://127.0.0.1:8081/accounts
+Header: Content-Type: application/json
+````
+
+Response:
+```json
+[
+  {
+    "accNumber": "1001",
+    "accHolderName": "Junior",
+    "balance": 200
+  },
+  {
+    "accNumber": "1000",
+    "accHolderName": "Joey",
+    "balance": 200
+  }
+]
+```
+
+5) Get an account 
+````
+Method: Get
+Uri:    http://127.0.0.1:8081/accounts/1000
+Header: Content-Type: application/json
+````
+Response:
+```json
+{
+  "accNumber": "1000",
+  "accHolderName": "Joey",
+  "balance": 200
+}
+```
+
+
 TODO:
 - Unit tests
 
-- Add comments to code where appropriate
-
-- Add readme API docs
