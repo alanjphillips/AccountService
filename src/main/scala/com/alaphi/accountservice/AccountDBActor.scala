@@ -20,9 +20,8 @@ class AccountDBActor extends Actor {
   override def receive = store(HashMap[String, Account]())
 
   def store(storageMap: Map[String, Account]): Receive = {
-    case ac: AccountCreation =>                                                                                                    // Handles AccountCreation message
-      val newAccNum = (ACC_NUM_BASE + storageMap.size).toString                                                                    // Build account number as String so alpha numeric is possible
-      val account = Account(newAccNum, ac.name, ac.balance)                                                                        // create account to save in memory
+    case ac: AccountCreation =>                                                                                                    // Handles AccountCreation message, atomic operation. Will not create account with existing account number
+      val account = Account(genAccountNum(storageMap), ac.name, ac.balance)                                                        // create account to save in memory
       context.become(store(addAccountsToMap(storageMap, List(account))))                                                           // make store(changedMap) the new receive handler for incoming messages
       sender ! account                                                                                                             // Send created account to sender as ACK
 
@@ -33,7 +32,9 @@ class AccountDBActor extends Actor {
       txfrResult foreach (r => context.become(store(addAccountsToMap(storageMap, List(r.sourceAccount, r.destAccount)))))          // make store(changedMap) the new receive handler for incoming messages
       sender ! txfrResult                                                                                                          // Send Either[AccountError, TransferSuccess] to sender to signify transfer completed or failed
 
-    case ga: GetAccount    => sender ! getAccount(storageMap, ga.key)
+    case ga: GetAccount     => sender ! getAccount(storageMap, ga.key)
+
+    case GetAllAccounts     => sender ! storageMap.values.toList
 
     case _ =>
   }
@@ -63,6 +64,8 @@ class AccountDBActor extends Actor {
   def getAccount(storageMap: Map[String, Account], accountNumber: String): Either[AccountError, Account] = {
     storageMap.get(accountNumber).toRight[AccountNotFound](AccountNotFound(accountNumber, s"Account Number doesn't exist: $accountNumber"))
   }
+
+  def genAccountNum(storageMap: Map[String, Account]) = (ACC_NUM_BASE + storageMap.size).toString
 }
 
 object AccountDBActor {

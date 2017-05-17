@@ -17,6 +17,7 @@ class AccountRoutes(accountService: AccountService) {
 
   val successHandler: PartialFunction[Any, StandardRoute] = {
     case Success(acc: Account)                => complete(OK -> acc)
+    case Success(accs: List[Account])         => complete(OK -> accs)
     case Success(Right(acc: Account))         => complete(OK -> acc)
     case Success(Right(trs: TransferSuccess)) => complete(OK -> trs)
   }
@@ -48,6 +49,9 @@ class AccountRoutes(accountService: AccountService) {
     } ~
     path("accounts" / Segment) { accountNumber =>
       get(onComplete(accountService.read(accountNumber))(successHandler orElse operationalFailureHandler orElse failureHandler))
+    } ~
+    path("accounts") {
+      get(onComplete(accountService.readAll)(successHandler orElse operationalFailureHandler orElse failureHandler))
     }
 
   }

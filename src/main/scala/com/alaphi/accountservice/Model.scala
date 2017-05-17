@@ -42,5 +42,6 @@ case class AccountNotFound(
 case class DoMoneyTransfer(sourceAccNum: String, destAccNum: String, transferAmount: Int)
 case class RemoveAccount(key: String)
 case class GetAccount(key: String)
+case object GetAllAccounts
 
 
