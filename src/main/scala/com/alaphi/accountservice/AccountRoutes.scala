@@ -39,16 +39,17 @@ class AccountRoutes(accountService: AccountService) {
         }
       }
     } ~
-    path("accounts" / Segment) { accountNumber =>
-      get(onComplete(accountService.read(accountNumber))(successHandler orElse operationalFailureHandler orElse failureHandler))
-    } ~
     path("accounts" / Segment / "transfer") { accountNumber =>
       post {
         entity(as[MoneyTransfer]) { moneyTransfer =>
           onComplete(accountService.transfer(accountNumber, moneyTransfer))(successHandler orElse operationalFailureHandler orElse failureHandler)
         }
       }
+    } ~
+    path("accounts" / Segment) { accountNumber =>
+      get(onComplete(accountService.read(accountNumber))(successHandler orElse operationalFailureHandler orElse failureHandler))
     }
+
   }
 
 }
