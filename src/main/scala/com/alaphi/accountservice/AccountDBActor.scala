@@ -33,12 +33,12 @@ class AccountDBActor extends Actor {
       txfrResult foreach (r => context.become(store(addAccountsToMap(storageMap, List(r.sourceAccount, r.destAccount)))))          // make store(changedMap) the new receive handler for incoming messages
       sender ! txfrResult                                                                                                          // Send Either[TransferFailed, TransferSuccess] to sender to signify transfer completed or failed
 
-    case ga: GetAccount    => sender ! storageMap.get(ga.key)
+    case ga: GetAccount    => sender ! getAccount(storageMap, ga.key)
 
     case _ =>
   }
 
-  def transfer(srcAcc: Either[AccountNotFound, Account], destAcc: Either[AccountNotFound, Account], amount: Int): Either[AccountError, TransferSuccess] =                           // Returns Some(transferSuccess) or None for failed
+  def transfer(srcAcc: Either[AccountNotFound, Account], destAcc: Either[AccountNotFound, Account], amount: Int): Either[AccountError, TransferSuccess] =
     for {
       src <- srcAcc
       dest <- destAcc
@@ -61,7 +61,7 @@ class AccountDBActor extends Actor {
     storageMap ++ (accounts map (a => (a.number, a)))                                                                                // Convert List[Account] to List[(AccNum,Account)]
 
   def getAccount(storageMap: Map[String, Account], accountNumber: String): Either[AccountNotFound, Account] = {
-    storageMap.get(accountNumber).toRight[AccountNotFound](AccountNotFound(accountNumber))
+    storageMap.get(accountNumber).toRight[AccountNotFound](AccountNotFound(accountNumber, s"Account Number doesn't exist: $accountNumber"))
   }
 }
 

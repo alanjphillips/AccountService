@@ -1,7 +1,9 @@
 package com.alaphi.accountservice
 
 trait Payload
-trait AccountError
+trait AccountError {
+  def description: String
+}
 
 case class AccountCreation(
   name: String,
@@ -33,7 +35,8 @@ case class TransferFailed(
 ) extends AccountError with Payload
 
 case class AccountNotFound(
-  accountNumber: String
+  accountNumber: String,
+  description: String
 ) extends AccountError with Payload
 
 case class DoMoneyTransfer(sourceAccNum: String, destAccNum: String, transferAmount: Int)
