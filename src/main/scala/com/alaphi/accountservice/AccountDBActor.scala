@@ -27,8 +27,9 @@ class AccountDBActor extends Actor {
       sender ! account                                                                                                             // Send created account to sender as ACK
 
     case dt: DoMoneyTransfer =>                                                                                                    // Transfer operation is handled atomically
-      val txfr = transfer(storageMap.get(dt.sourceAccNum), storageMap.get(dt.destAccNum), dt.transferAmount)                       // Get src and dest accounts from memory and pass to transfer
-      val txfrResult = txfr.toRight[TransferFailed](TransferFailed(dt.sourceAccNum, dt.destAccNum, dt.transferAmount, "Failed"))   // Convert Option[TransferSuccess] to Either, Right(TransferSuccess) or Left(TransferFailed)
+      val src = getAccount(storageMap, dt.sourceAccNum)
+      val dest = getAccount(storageMap, dt.destAccNum)
+      val txfrResult = transfer(src, dest, dt.transferAmount)                                                                      // Get src and dest accounts from memory and pass to transfer
       txfrResult foreach (r => context.become(store(addAccountsToMap(storageMap, List(r.sourceAccount, r.destAccount)))))          // make store(changedMap) the new receive handler for incoming messages
       sender ! txfrResult                                                                                                          // Send Either[TransferFailed, TransferSuccess] to sender to signify transfer completed or failed
 
@@ -37,17 +38,31 @@ class AccountDBActor extends Actor {
     case _ =>
   }
 
-  def transfer(srcAcc: Option[Account], destAcc: Option[Account], amount: Int): Option[TransferSuccess] =                           // Returns Some(transferSuccess) or None for failed
+  def transfer(srcAcc: Either[AccountNotFound, Account], destAcc: Either[AccountNotFound, Account], amount: Int): Either[AccountError, TransferSuccess] =                           // Returns Some(transferSuccess) or None for failed
     for {
       src <- srcAcc
       dest <- destAcc
-      if (src.balance >= amount)
-      srcAdjusted = src.copy(balance = src.balance - amount)
-      destAdjusted = dest.copy(balance = dest.balance + amount)
-    } yield TransferSuccess(srcAdjusted, destAdjusted, amount)
+      res <- adjust(src, dest, amount)
+    } yield res
 
-  def addAccountsToMap(storageMap: Map[String, Account], accounts: List[Account]) = storageMap ++ (accounts map (a => (a.number, a))) // Convert List[Account] to List[(AccNum,Account)]
+  def adjust(src: Account, dest: Account, amount: Int): Either[TransferFailed, TransferSuccess] = {
+    if (src.balance >= amount) {
+      Right(
+        TransferSuccess(
+          src.copy(balance = src.balance - amount),
+          dest.copy(balance = dest.balance + amount),
+          amount
+        )
+      )
+    } else Left(TransferFailed(src.number, dest.number, amount, "Not enough funds"))
+  }
 
+  def addAccountsToMap(storageMap: Map[String, Account], accounts: List[Account]) =
+    storageMap ++ (accounts map (a => (a.number, a)))                                                                                // Convert List[Account] to List[(AccNum,Account)]
+
+  def getAccount(storageMap: Map[String, Account], accountNumber: String): Either[AccountNotFound, Account] = {
+    storageMap.get(accountNumber).toRight[AccountNotFound](AccountNotFound(accountNumber))
+  }
 }
 
 object AccountDBActor {

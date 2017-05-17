@@ -22,8 +22,9 @@ class AccountRoutes(accountService: AccountService) {
   }
 
   val operationalFailureHandler: PartialFunction[Any, StandardRoute] = {
-    case Success(Left(trf: TransferFailed)) => complete(BadRequest -> trf)
-    case Success(None)                      => complete(NotFound)
+    case Success(Left(trf: TransferFailed))  => complete(BadRequest -> trf)
+    case Success(Left(anf: AccountNotFound)) => complete(NotFound -> anf)
+    case Success(None)                       => complete(NotFound)
   }
 
   val failureHandler: PartialFunction[Any, StandardRoute] = {
