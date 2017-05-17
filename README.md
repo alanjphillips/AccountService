@@ -12,15 +12,15 @@ Header: Content-Type: application/json
 Body:
 ```json
 {
-  "name":"Joey",
+  "accHolderName":"Joey",
   "balance":200
 }
 ````
-Response: Note the account `number` in the successful response with Http Status Code = 201 Created:
+Response: Note the account `number` in the successful response with Http Status Code = 200 OK:
 ```json
 {
-  "number": "1000",
-  "name": "Joey",
+  "accNumber": "1000",
+  "accHolderName": "Joey",
   "balance": 200
 }
 ```
@@ -29,7 +29,7 @@ Response: Note the account `number` in the successful response with Http Status 
 Body:
 ```json
 {
-  "name":"JoeJoeJr",
+  "accHolderName":"JoeJoeJr",
   "balance":0
 }
 ````
@@ -51,13 +51,13 @@ Response: Successful transfer will have Http Status Code = 200 OK
 ```json
 {
   "sourceAccount": {
-    "number": "1000",
-    "name": "Joey",
+    "accNumber": "1000",
+    "accHolderName": "Joey",
     "balance": 101
   },
   "destAccount": {
-    "number": "1001",
-    "name": "JoeJoeJr",
+    "accNumber": "1001",
+    "accHolderName": "JoeJoeJr",
     "balance": 99
   },
   "transferAmount": 99
@@ -149,7 +149,4 @@ Account Not Found for source account path param or destination `destAccNum` in j
   "description": "Account Number doesn't exist: 1000000"
 }
 ```
-
-TODO:
-- Unit tests
 

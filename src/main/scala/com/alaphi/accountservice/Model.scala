@@ -1,6 +1,7 @@
 package com.alaphi.accountservice
 
 trait Payload
+
 trait AccountError {
   def description: String
 }
@@ -44,7 +45,7 @@ case class TransferFailed(
 ) extends AccountError with Payload
 
 case class AccountNotFound(
-  accountNumber: String,
+  accNumber: String,
   description: String
 ) extends AccountError with Payload
 
