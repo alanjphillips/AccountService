@@ -3,13 +3,13 @@
 
 ### Usage and API:
 
-[Create Account](https://github.com/alanphillips78/AccountService#create-an-account-to-be-source-of-the-money-transfer)
+[Create Account](#create-an-account-to-be-source-of-the-money-transfer)
 
-[Perform Money Transfer](https://github.com/alanphillips78/AccountService#perform-transfer-from-source-account-number-as-path-param-with-value-1000-representing-joey)
+[Perform Money Transfer](#perform-transfer-from-source-account-number-as-path-param-with-value-1000-representing-joey)
 
-[Perform Deposit](https://github.com/alanphillips78/AccountService#perform-deposit-to-account-as-path-param-with-value-1000-representing-joey)
+[Perform Deposit](#perform-deposit-to-account-as-path-param-with-value-1000-representing-joey)
 
-[Get all Accounts](https://github.com/alanphillips78/AccountService#get-all-accounts)
+[Get all Accounts](#get-all-accounts)
 
 [Get single Account](#get-an-account)
 
@@ -98,6 +98,40 @@ Account Not Found for source account path param or destination `destAccNum` in j
 ```
 
 
+### Perform deposit to account as path param with value `1000` representing `Joey`:
+````
+Method: Post
+Uri:    http://127.0.0.1:8081/accounts/1000/deposit
+Header: Content-Type: application/json
+````
+Body:
+```json
+{
+"depositAmount":10000
+}
+````
+Response: Successful transfer will have Http Status Code = 200 OK
+```json
+{
+  "account": {
+    "accNumber": "1001",
+    "accHolderName": "Junior",
+    "balance": 120200
+  },
+  "depositAmount": 10000
+}
+```
+Errors: 
+
+Account Not Found for source account path param or destination `destAccNum` in json body will have Http Status Code = 404 Not Found
+```json
+{
+  "accountNumber": "1000000",
+  "description": "Account Number doesn't exist: 1000000"
+}
+```
+
+
 ### Get all accounts:
 ````
 Method: Get
@@ -136,38 +170,3 @@ Response:
   "balance": 200
 }
 ```
-
-
-### Perform deposit to account as path param with value `1000` representing `Joey`:
-````
-Method: Post
-Uri:    http://127.0.0.1:8081/accounts/1000/deposit
-Header: Content-Type: application/json
-````
-Body:
-```json
-{
-"depositAmount":10000
-}
-````
-Response: Successful transfer will have Http Status Code = 200 OK
-```json
-{
-  "account": {
-    "accNumber": "1001",
-    "accHolderName": "Junior",
-    "balance": 120200
-  },
-  "depositAmount": 10000
-}
-```
-Errors: 
-
-Account Not Found for source account path param or destination `destAccNum` in json body will have Http Status Code = 404 Not Found
-```json
-{
-  "accountNumber": "1000000",
-  "description": "Account Number doesn't exist: 1000000"
-}
-```
-
