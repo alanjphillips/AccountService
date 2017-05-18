@@ -21,7 +21,7 @@ class AccountDBActor extends Actor {
 
   def store(storageMap: Map[String, Account]): Receive = {
     case ac: AccountCreation =>                                                                                                    // Handles AccountCreation message, atomic operation. Will not create account with existing account number
-      val account = Account(genAccountNum(storageMap), ac.accHolderName, ac.balance)                                                        // create account to save in memory
+      val account = Account(genAccountNum(storageMap), ac.accHolderName, ac.balance)                                               // create account to save in memory
       context.become(store(addAccountsToMap(storageMap, List(account))))                                                           // make store(changedMap) the new receive handler for incoming messages
       sender ! account                                                                                                             // Send created account to sender as ACK
 
@@ -42,7 +42,7 @@ class AccountDBActor extends Actor {
 
     case GetAllAccounts => sender ! storageMap.values.toList
 
-    case _ =>
+    case unsupported    => println(s"AccountActorDB received unsupported message: $unsupported")
   }
 
   def transfer(srcAcc: Either[AccountError, Account], destAcc: Either[AccountError, Account], amount: Int): Either[AccountError, TransferSuccess] =

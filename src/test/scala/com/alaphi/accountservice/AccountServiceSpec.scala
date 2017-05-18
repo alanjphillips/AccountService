@@ -115,7 +115,7 @@ class AccountServiceSpec
   }
 
   override def afterAll {
-    shutdown()
+    TestKit.shutdownActorSystem(system)
   }
 
 }
