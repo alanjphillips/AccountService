@@ -1,7 +1,7 @@
 # AccountService
 ## REST Service with InMemory storage
 
-Usage and API:
+### Usage and API:
 
 [Create Account](https://github.com/alanphillips78/AccountService#create-an-account-to-be-source-of-the-money-transfer)
 
