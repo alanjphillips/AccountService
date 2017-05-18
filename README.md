@@ -16,7 +16,9 @@
 
 Use a Rest client such as Postman chrome 
 
+***
 ### Create an account to be source of the money transfer:
+***
 ````
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts
@@ -39,7 +41,9 @@ Response: Note the account `number` in the successful response with Http Status 
 ```
 
 
+***
 ### Create another account to be destination of the money transfer: 
+***
 Body:
 ```json
 {
@@ -49,7 +53,9 @@ Body:
 ```
 
 
+***
 ### Perform transfer from source account number as path param with value `1000` representing `Joey`:
+***
 ````
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts/1000/transfer
@@ -98,7 +104,9 @@ Account Not Found for source account path param or destination `destAccNum` in j
 ```
 
 
+***
 ### Perform deposit to account as path param with value `1000` representing `Joey`:
+***
 ````
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts/1000/deposit
@@ -132,7 +140,9 @@ Account Not Found for source account path param or destination `destAccNum` in j
 ```
 
 
+***
 ### Get all accounts:
+***
 ````
 Method: Get
 Uri:    http://127.0.0.1:8081/accounts
@@ -156,7 +166,9 @@ Response:
 ```
 
 
+***
 ### Get an account 
+***
 ````
 Method: Get
 Uri:    http://127.0.0.1:8081/accounts/1000
