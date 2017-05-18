@@ -3,6 +3,17 @@
 
 Usage and API:
 
+[Create Account](https://github.com/alanphillips78/AccountService#create-an-account-to-be-source-of-the-money-transfer)
+
+[Perform Money Transfer](https://github.com/alanphillips78/AccountService#perform-transfer-from-source-account-number-as-path-param-with-value-1000-representing-joey)
+
+[Perform Deposit](https://github.com/alanphillips78/AccountService#perform-deposit-to-account-as-path-param-with-value-1000-representing-joey)
+
+[Get all Accounts](https://github.com/alanphillips78/AccountService#get-all-accounts)
+
+[Get single Account](https://github.com/alanphillips78/AccountService#get-an-account)
+
+
 Use a Rest client such as Postman chrome 
 
 ### Create an account to be source of the money transfer:
