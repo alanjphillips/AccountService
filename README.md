@@ -10,6 +10,25 @@
 
 ### Usage and API:
 
+- Clone `AccountService` repo from Github
+
+- CD into project folder and run unit-tests using SBT
+
+```
+ sbt test
+```
+
+- Run the Account Service
+
+```
+ sbt run
+```
+
+- Alternatively, in Intellij run server by right-clicking on Boot.scala and choosing `Run Server`. Unit-tests can also be executed there.
+
+- The following links describe the API calls. Use a Rest client such as Postman on Chrome.
+ 
+
 [Create Account](#create-an-account-to-be-source-of-the-money-transfer)
 
 [Perform Money Transfer](#perform-transfer-from-source-account-number-as-path-param-with-value-1000-representing-joey)
@@ -20,8 +39,6 @@
 
 [Get single Account](#get-an-account)
 
-
-Use a Rest client such as Postman chrome 
 
 ***
 ### Create an account to be source of the money transfer:
