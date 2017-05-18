@@ -11,7 +11,7 @@
 
 [Get all Accounts](https://github.com/alanphillips78/AccountService#get-all-accounts)
 
-[Get single Account](https://github.com/alanphillips78/AccountService#get-an-account)
+[Get single Account](#get-an-account)
 
 
 Use a Rest client such as Postman chrome 
