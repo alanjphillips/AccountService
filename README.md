@@ -1,6 +1,13 @@
 # AccountService
 ## REST Service with InMemory storage
 
+
+### Future Enhancements
+- Use BigDecimal type for currency amounts, Int is currently used in this POC to make testing easier
+- Add Currency field to account, transfers, and deposits may be useful for new features  
+- Add logging to Routes, Service and DBActor
+
+
 ### Usage and API:
 
 [Create Account](#create-an-account-to-be-source-of-the-money-transfer)

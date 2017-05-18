@@ -16,7 +16,12 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.Future
 
-class AccountRoutesSpec extends WordSpec with Matchers with MockitoSugar with ScalatestRouteTest {
+class AccountRoutesSpec
+  extends WordSpec
+    with Matchers
+    with MockitoSugar
+    with ScalatestRouteTest {
+
   val accountService = mock[AccountService]
 
   val accRoutes = AccountRoutes(accountService).routes

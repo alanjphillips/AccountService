@@ -3,6 +3,7 @@ package com.alaphi.accountservice
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.stream.ActorMaterializer
+import scala.io.StdIn
 
 object Boot extends App {
 
@@ -17,5 +18,11 @@ object Boot extends App {
   val routes = AccountRoutes(accountService).routes
 
   val bindingFuture = Http().bindAndHandle(routes, "0.0.0.0", 8081)
+
+  println(s"Account Service is running. Press RETURN to terminate")
+
+  StdIn.readLine()
+
+  bindingFuture.flatMap(_.unbind()).onComplete(_ => system.terminate())
 
 }
