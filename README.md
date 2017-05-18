@@ -1,9 +1,9 @@
 # AccountService
-REST Service with InMemory storage
+## REST Service with InMemory storage
 
 Usage and API:
 Use a Rest client such as Postman chrome 
-1) Create an account to be source of the money transfer:
+### Create an account to be source of the money transfer:
 ````
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts
@@ -15,7 +15,7 @@ Body:
   "accHolderName":"Joey",
   "balance":200
 }
-````
+```
 Response: Note the account `number` in the successful response with Http Status Code = 200 OK:
 ```json
 {
@@ -25,16 +25,18 @@ Response: Note the account `number` in the successful response with Http Status 
 }
 ```
 
-2) Create another account to be destination of the money transfer: 
+
+### Create another account to be destination of the money transfer: 
 Body:
 ```json
 {
   "accHolderName":"JoeJoeJr",
   "balance":0
 }
-````
+```
 
-3) Perform transfer from source account number as path param with value `1000` representing `Joey`:
+
+### Perform transfer from source account number as path param with value `1000` representing `Joey`:
 ````
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts/1000/transfer
@@ -81,7 +83,8 @@ Account Not Found for source account path param or destination `destAccNum` in j
 }
 ```
 
-4) Get all accounts:
+
+### Get all accounts:
 ````
 Method: Get
 Uri:    http://127.0.0.1:8081/accounts
@@ -104,7 +107,8 @@ Response:
 ]
 ```
 
-5) Get an account 
+
+### Get an account 
 ````
 Method: Get
 Uri:    http://127.0.0.1:8081/accounts/1000
@@ -118,7 +122,9 @@ Response:
   "balance": 200
 }
 ```
-6) Perform deposit to account as path param with value `1000` representing `Joey`:
+
+
+### Perform deposit to account as path param with value `1000` representing `Joey`:
 ````
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts/1000/deposit
