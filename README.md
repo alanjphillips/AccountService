@@ -19,19 +19,23 @@ Use a Rest client such as Postman chrome
 ***
 ### Create an account to be source of the money transfer:
 ***
-````
+```
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts
 Header: Content-Type: application/json
-````
-Body:
+```
+
+#### Body:
+
 ```json
 {
   "accHolderName":"Joey",
   "balance":200
 }
 ```
-Response: Note the account `number` in the successful response with Http Status Code = 200 OK:
+
+#### Response: Note the account `number` in the successful response with Http Status Code = 200 OK:
+
 ```json
 {
   "accNumber": "1000",
@@ -44,7 +48,8 @@ Response: Note the account `number` in the successful response with Http Status 
 ***
 ### Create another account to be destination of the money transfer: 
 ***
-Body:
+
+#### Body:
 ```json
 {
   "accHolderName":"JoeJoeJr",
@@ -56,19 +61,23 @@ Body:
 ***
 ### Perform transfer from source account number as path param with value `1000` representing `Joey`:
 ***
-````
+```
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts/1000/transfer
 Header: Content-Type: application/json
-````
-Body:
+```
+
+#### Body:
+
 ```json
 {
   "destAccNum":"1001",
   "transferAmount":99
 }
-````
-Response: Successful transfer will have Http Status Code = 200 OK
+```
+
+#### Response: Successful transfer will have Http Status Code = 200 OK
+
 ```json
 {
   "sourceAccount": {
@@ -84,7 +93,7 @@ Response: Successful transfer will have Http Status Code = 200 OK
   "transferAmount": 99
 }
 ```
-Errors: 
+#### Errors: 
 
 Insufficient funds in source account will have Http Status Code = 400 Bad Request
 ```json
@@ -95,6 +104,7 @@ Insufficient funds in source account will have Http Status Code = 400 Bad Reques
   "description": "Not enough funds available in account: 1000 "
 }
 ```
+
 Account Not Found for source account path param or destination `destAccNum` in json body will have Http Status Code = 404 Not Found
 ```json
 {
@@ -107,18 +117,22 @@ Account Not Found for source account path param or destination `destAccNum` in j
 ***
 ### Perform deposit to account as path param with value `1000` representing `Joey`:
 ***
-````
+```
 Method: Post
 Uri:    http://127.0.0.1:8081/accounts/1000/deposit
 Header: Content-Type: application/json
-````
-Body:
+```
+
+#### Body:
+
 ```json
 {
 "depositAmount":10000
 }
-````
-Response: Successful transfer will have Http Status Code = 200 OK
+```
+
+#### Response: Successful transfer will have Http Status Code = 200 OK
+
 ```json
 {
   "account": {
@@ -129,9 +143,10 @@ Response: Successful transfer will have Http Status Code = 200 OK
   "depositAmount": 10000
 }
 ```
-Errors: 
 
-Account Not Found for source account path param or destination `destAccNum` in json body will have Http Status Code = 404 Not Found
+#### Errors: 
+
+Account Not Found for destination account number in path param will have Http Status Code = 404 Not Found
 ```json
 {
   "accountNumber": "1000000",
@@ -143,13 +158,14 @@ Account Not Found for source account path param or destination `destAccNum` in j
 ***
 ### Get all accounts:
 ***
-````
+```
 Method: Get
 Uri:    http://127.0.0.1:8081/accounts
 Header: Content-Type: application/json
-````
+```
 
-Response:
+#### Response:
+
 ```json
 [
   {
@@ -169,16 +185,28 @@ Response:
 ***
 ### Get an account 
 ***
-````
+```
 Method: Get
 Uri:    http://127.0.0.1:8081/accounts/1000
 Header: Content-Type: application/json
-````
-Response:
+```
+
+#### Response:
+
 ```json
 {
   "accNumber": "1000",
   "accHolderName": "Joey",
   "balance": 200
+}
+```
+
+#### Errors: 
+
+Account Not Found for account number in path param will have Http Status Code = 404 Not Found
+```json
+{
+  "accountNumber": "1000000",
+  "description": "Account Number doesn't exist: 1000000"
 }
 ```
