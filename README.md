@@ -2,7 +2,9 @@
 ## REST Service with InMemory storage
 
 Usage and API:
+
 Use a Rest client such as Postman chrome 
+
 ### Create an account to be source of the money transfer:
 ````
 Method: Post
@@ -66,6 +68,7 @@ Response: Successful transfer will have Http Status Code = 200 OK
 }
 ```
 Errors: 
+
 Insufficient funds in source account will have Http Status Code = 400 Bad Request
 ```json
 {
@@ -148,6 +151,7 @@ Response: Successful transfer will have Http Status Code = 200 OK
 }
 ```
 Errors: 
+
 Account Not Found for source account path param or destination `destAccNum` in json body will have Http Status Code = 404 Not Found
 ```json
 {
