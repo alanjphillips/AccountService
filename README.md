@@ -2,13 +2,6 @@
 ## REST Service with InMemory storage
 
 
-### Future Enhancements
-- Use BigDecimal type for currency amounts, Int is currently used in this POC to make testing easier
-- Add Currency field to account, transfers, and deposits may be useful for new features  
-- Add logging to Routes, Service and DBActor
-- Can be broken down into routes / services / actors / model packages if more are added in the future 
-
-
 ### Usage and API:
 
 - Clone `AccountService` repo from Github
@@ -39,6 +32,15 @@
 [Get all Accounts](#get-all-accounts)
 
 [Get single Account](#get-an-account)
+
+
+
+### Future Enhancements
+- Use BigDecimal type for currency amounts, Int is currently used in this POC to make testing easier
+- Add Currency field to account, transfers, and deposits may be useful for new features  
+- Add logging to Routes, Service and DBActor
+- Can be broken down into routes / services / actors / model packages if more are added in the future 
+
 
 
 ***
