@@ -1,6 +1,5 @@
 # AccountService
-## REST Service with InMemory storage
-
+## REST Service with InMemory storage - using Akka-Http, and Circe for JSON. ScalaTest is used for unit-tests 
 
 ### Usage and API:
 
