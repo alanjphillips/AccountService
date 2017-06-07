@@ -13,16 +13,21 @@ object Boot extends App {
 
   val db = system.actorOf(AccountDBActor.props)
 
-  val accountService = AccountService(db)
+  val client = system.actorOf(ClientActor.props(db))
 
-  val routes = AccountRoutes(accountService).routes
+  client ! StartSending
 
-  val bindingFuture = Http().bindAndHandle(routes, "0.0.0.0", 8081)
 
-  println(s"Account Service is running. Press RETURN to terminate")
-
-  StdIn.readLine()
-
-  bindingFuture.flatMap(_.unbind()).onComplete(_ => system.terminate())
+//  val accountService = AccountService(db)
+//
+//  val routes = AccountRoutes(accountService).routes
+//
+//  val bindingFuture = Http().bindAndHandle(routes, "0.0.0.0", 8081)
+//
+//  println(s"Account Service is running. Press RETURN to terminate")
+//
+//  StdIn.readLine()
+//
+//  bindingFuture.flatMap(_.unbind()).onComplete(_ => system.terminate())
 
 }
