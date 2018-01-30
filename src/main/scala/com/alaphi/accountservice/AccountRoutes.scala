@@ -32,34 +32,35 @@ class AccountRoutes(accountService: AccountService) {
     case Failure(f) => complete(BadRequest -> f)
   }
 
+  val responseHandler: PartialFunction[Any, StandardRoute] = successHandler orElse operationalFailureHandler orElse failureHandler
 
   val routes = {
     path("accounts") {
       post {
         entity(as[AccountCreation]) { accountCreation =>
-          onComplete(accountService.create(accountCreation))(successHandler orElse operationalFailureHandler orElse failureHandler)
+          onComplete(accountService.create(accountCreation))(responseHandler)
         }
       }
     } ~
     path("accounts" / Segment / "transfer") { accountNumber =>
       post {
         entity(as[MoneyTransfer]) { moneyTransfer =>
-          onComplete(accountService.transfer(accountNumber, moneyTransfer))(successHandler orElse operationalFailureHandler orElse failureHandler)
+          onComplete(accountService.transfer(accountNumber, moneyTransfer))(responseHandler)
         }
       }
     } ~
     path("accounts" / Segment / "deposit") { accountNumber =>
       post {
         entity(as[Deposit]) { deposit =>
-          onComplete(accountService.deposit(accountNumber, deposit))(successHandler orElse operationalFailureHandler orElse failureHandler)
+          onComplete(accountService.deposit(accountNumber, deposit))(responseHandler)
         }
       }
     } ~
     path("accounts" / Segment) { accountNumber =>
-      get(onComplete(accountService.read(accountNumber))(successHandler orElse operationalFailureHandler orElse failureHandler))
+      get(onComplete(accountService.read(accountNumber))(responseHandler))
     } ~
     path("accounts") {
-      get(onComplete(accountService.readAll)(successHandler orElse operationalFailureHandler orElse failureHandler))
+      get(onComplete(accountService.readAll)(responseHandler))
     }
 
   }
