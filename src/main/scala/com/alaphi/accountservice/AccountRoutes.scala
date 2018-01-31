@@ -6,7 +6,8 @@ import akka.http.scaladsl.server.PathMatchers.Segment
 import akka.http.scaladsl.server.StandardRoute
 import de.heikoseeberger.akkahttpcirce.CirceSupport._
 import io.circe.generic.auto._
-import scala.util.{Failure, Success}
+
+import scala.util.{Failure, Success, Try}
 
 /**
   * AccountRoutes: REST Interface for Accounts
@@ -15,7 +16,7 @@ import scala.util.{Failure, Success}
   */
 class AccountRoutes(accountService: AccountService) {
 
-  val successHandler: PartialFunction[Any, StandardRoute] = {
+  val successHandler: PartialFunction[Try[_], StandardRoute] = {
     case Success(acc: Account)                => complete(OK -> acc)
     case Success(accs: List[Account])         => complete(OK -> accs)
     case Success(Right(acc: Account))         => complete(OK -> acc)
@@ -23,16 +24,16 @@ class AccountRoutes(accountService: AccountService) {
     case Success(Right(dep: DepositSuccess))  => complete(OK -> dep)
   }
 
-  val operationalFailureHandler: PartialFunction[Any, StandardRoute] = {
+  val operationalFailureHandler: PartialFunction[Try[_], StandardRoute] = {
     case Success(Left(trf: TransferFailed))  => complete(BadRequest -> trf)
     case Success(Left(anf: AccountNotFound)) => complete(NotFound -> anf)
   }
 
-  val failureHandler: PartialFunction[Any, StandardRoute] = {
+  val failureHandler: PartialFunction[Try[_], StandardRoute] = {
     case Failure(f) => complete(BadRequest -> f)
   }
 
-  val responseHandler: PartialFunction[Any, StandardRoute] = successHandler orElse operationalFailureHandler orElse failureHandler
+  val responseHandler: PartialFunction[Try[_], StandardRoute] = successHandler orElse operationalFailureHandler orElse failureHandler
 
   val routes = {
     path("accounts") {
